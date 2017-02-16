@@ -1,5 +1,3 @@
-#include <err.h>
-#include <stdlib.h>
 #include <string.h>
 
 #include "led.h"
@@ -23,5 +21,5 @@ led_toggle(void)
         return;
 
     if (close(file_descriptor) == -1)
-        err(EXIT_FAILURE, "close");
+        return;
 }
