@@ -1,10 +1,8 @@
 #include <sys/gpio.h>
-#include <sys/ioctl.h>
 
 #include <err.h>
 #include <stdlib.h>
 #include <string.h>
-#include <unistd.h>
 
 #include "rpi_led.h"
 

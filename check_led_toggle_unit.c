@@ -4,6 +4,8 @@
 
 START_TEST(test_led_toggle_gets_called) {
     set_mock_open_return_value(5);
+    set_mock_ioctl_return_value(-1);
+    set_mock_close_return_value(-1);
     led_toggle();
     ck_assert_int_eq(fake_led_toggle_getcount(), 1);
     led_toggle();
