@@ -2,5 +2,6 @@
 #define RPI_LED_H
 
 #include "led.h"
+#include "rpi_syscalls.h"
 
 #endif

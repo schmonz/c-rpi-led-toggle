@@ -57,9 +57,10 @@ clean:
 ${THE_TESTS}: ${THE_LIBRARY} check_led_toggle.c check_led_toggle_acceptance.c check_led_toggle_unit.c
 	${SILENT}${CC} ${CFLAGS} ${TEST_CFLAGS} -o ${THE_TESTS} check_led_toggle_acceptance.c check_led_toggle_unit.c check_led_toggle.c ${TEST_LIBS} ${THE_LIBRARY}
 
-${THE_LIBRARY}: ${LED_H} ${LED_C}
-	${SILENT}${CC} ${CFLAGS} -c ${LED_C} -o ${LED_O}
-	${SILENT}${AR} rc ${THE_LIBRARY} ${LED_O}
+${THE_LIBRARY}: ${LED_H} ${LED_C} ${TARGET_SYSTEM}_syscalls.h ${TARGET_SYSTEM}_syscalls.c
+	${SILENT}${CC} ${CFLAGS} -c ${LED_C}
+	${SILENT}${CC} ${CFLAGS} -c ${TARGET_SYSTEM}_syscalls.c
+	${SILENT}${AR} rc ${THE_LIBRARY} ${LED_O} ${TARGET_SYSTEM}_syscalls.o
 	${SILENT}${RANLIB} ${THE_LIBRARY}
 
 ${THE_PROGRAM}: ${THE_LIBRARY} ${LED_H} toggler.c
