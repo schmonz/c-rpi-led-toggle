@@ -31,10 +31,10 @@ TEST_CFLAGS	:= $(shell pkg-config --cflags check)
 TEST_LIBS	:= $(shell pkg-config --libs check)
 TEST_LIBS	+= -lm
 
-LED_H		= ${TARGET_SYSTEM}_led.h
-LED_C		= ${TARGET_SYSTEM}_led.c
-LED_O		= ${TARGET_SYSTEM}_led.o
-LED_A		= ${TARGET_SYSTEM}_led.a
+LED_H		= led.h
+LED_C		= led.c
+LED_O		= led.o
+LED_A		= led.a
 
 all: ${CC}
 	${SILENT}${MAKE} ${MAKE_TARGET}
@@ -49,7 +49,7 @@ check: ${THE_TESTS}
 	${SILENT}./${THE_TESTS}
 
 clean:
-	${SILENT}rm -f *.o *.a ${THE_TESTS} ${THE_PROGRAM}
+	${SILENT}rm -f *.o *.a syscalls.h ${THE_TESTS} ${THE_PROGRAM}
 	${SILENT}rm -rf *.dSYM *.gcda *.gcno *.gcov
 
 .PHONY: all check clean
@@ -57,11 +57,14 @@ clean:
 ${THE_TESTS}: ${THE_LIBRARY} check_led_toggle.c check_led_toggle_acceptance.c check_led_toggle_unit.c
 	${SILENT}${CC} ${CFLAGS} ${TEST_CFLAGS} -o ${THE_TESTS} check_led_toggle_acceptance.c check_led_toggle_unit.c check_led_toggle.c ${TEST_LIBS} ${THE_LIBRARY}
 
-${THE_LIBRARY}: ${LED_H} ${LED_C} ${TARGET_SYSTEM}_syscalls.h ${TARGET_SYSTEM}_syscalls.c
+${THE_LIBRARY}: ${LED_H} ${LED_C} syscalls.h ${TARGET_SYSTEM}_syscalls.h ${TARGET_SYSTEM}_syscalls.c
 	${SILENT}${CC} ${CFLAGS} -c ${LED_C}
 	${SILENT}${CC} ${CFLAGS} -c ${TARGET_SYSTEM}_syscalls.c
 	${SILENT}${AR} rc ${THE_LIBRARY} ${LED_O} ${TARGET_SYSTEM}_syscalls.o
 	${SILENT}${RANLIB} ${THE_LIBRARY}
+
+syscalls.h: ${TARGET_SYSTEM}_syscalls.h
+	${SILENT}echo '#include "${TARGET_SYSTEM}_syscalls.h"' > syscalls.h
 
 ${THE_PROGRAM}: ${THE_LIBRARY} ${LED_H} toggler.c
 	${SILENT}${CC} ${CFLAGS} -o ${THE_PROGRAM} toggler.c ${THE_LIBRARY}
