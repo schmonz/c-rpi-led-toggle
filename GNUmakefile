@@ -2,7 +2,7 @@ SILENT		?= @
 
 DEFAULT_SYSTEM	=  host
 THE_TESTS	=  check_led_toggle
-THE_LIBRARY	=  led.a
+THE_LIBRARY	=  ${LED_A}
 THE_PROGRAM	=  toggler
 
 TARGET_SYSTEM	?= ${DEFAULT_SYSTEM}
@@ -33,6 +33,8 @@ TEST_LIBS	+= -lm
 
 LED_H		= ${TARGET_SYSTEM}_led.h
 LED_C		= ${TARGET_SYSTEM}_led.c
+LED_O		= ${TARGET_SYSTEM}_led.o
+LED_A		= ${TARGET_SYSTEM}_led.a
 
 all: ${CC}
 	${SILENT}${MAKE} ${MAKE_TARGET}
@@ -56,8 +58,8 @@ ${THE_TESTS}: ${THE_LIBRARY} check_led_toggle.c check_led_toggle_acceptance.c ch
 	${SILENT}${CC} ${CFLAGS} ${TEST_CFLAGS} -o ${THE_TESTS} check_led_toggle_acceptance.c check_led_toggle_unit.c check_led_toggle.c ${TEST_LIBS} ${THE_LIBRARY}
 
 ${THE_LIBRARY}: ${LED_H} ${LED_C}
-	${SILENT}${CC} ${CFLAGS} -c ${LED_C} -o led.o
-	${SILENT}${AR} rc ${THE_LIBRARY} led.o
+	${SILENT}${CC} ${CFLAGS} -c ${LED_C} -o ${LED_O}
+	${SILENT}${AR} rc ${THE_LIBRARY} ${LED_O}
 	${SILENT}${RANLIB} ${THE_LIBRARY}
 
 ${THE_PROGRAM}: ${THE_LIBRARY} ${LED_H} toggler.c

@@ -1,3 +1,8 @@
+#include <stdio.h>
+
+#include "led.h"
+
 int main(void) {
-    return 0;
+    fprintf(stderr, "about to toggle the LED\n");
+    led_toggle();
 }
