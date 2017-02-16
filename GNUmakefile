@@ -49,7 +49,7 @@ check: ${THE_TESTS}
 	${SILENT}./${THE_TESTS}
 
 clean:
-	${SILENT}rm -f *.o ${THE_TESTS} ${THE_LIBRARY} ${THE_PROGRAM}
+	${SILENT}rm -f *.o *.a ${THE_TESTS} ${THE_PROGRAM}
 	${SILENT}rm -rf *.dSYM *.gcda *.gcno *.gcov
 
 .PHONY: all check clean
