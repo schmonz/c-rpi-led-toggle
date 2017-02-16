@@ -31,10 +31,8 @@ TEST_CFLAGS	:= $(shell pkg-config --cflags check)
 TEST_LIBS	:= $(shell pkg-config --libs check)
 TEST_LIBS	+= -lm
 
-LED_H		= led.h
-LED_C		= led.c
-LED_H		?= ${TARGET_SYSTEM}_led.h
-LED_C		?= ${TARGET_SYSTEM}_led.c
+LED_H		= ${TARGET_SYSTEM}_led.h
+LED_C		= ${TARGET_SYSTEM}_led.c
 
 all: ${CC}
 	${SILENT}${MAKE} ${MAKE_TARGET}
