@@ -16,7 +16,7 @@ CFLAGS		+= --sysroot=${CROSS_ROOT}/distrib/${CROSS_ARCH}
 TOOLDIR		?= ${CROSS_ROOT}/tools
 TARGET_PREFIX	= armv6--netbsdelf-eabihf-
 else
-MAKE_TARGET	= check
+MAKE_TARGET	= ${THE_PROGRAM} check
 TOOLDIR		?= /usr
 TARGET_PREFIX	?=
 endif
@@ -30,6 +30,11 @@ CFLAGS		+= -g -O0 -Wall -Werror -Wextra -std=c99
 TEST_CFLAGS	:= $(shell pkg-config --cflags check)
 TEST_LIBS	:= $(shell pkg-config --libs check)
 TEST_LIBS	+= -lm
+
+LED_H		= led.h
+LED_C		= led.c
+LED_H		?= ${TARGET_SYSTEM}_led.h
+LED_C		?= ${TARGET_SYSTEM}_led.c
 
 all: ${CC}
 	${SILENT}${MAKE} ${MAKE_TARGET}
@@ -52,10 +57,10 @@ clean:
 ${THE_TESTS}: ${THE_LIBRARY} check_led_toggle.c check_led_toggle_acceptance.c check_led_toggle_unit.c
 	${SILENT}${CC} ${CFLAGS} ${TEST_CFLAGS} -o ${THE_TESTS} check_led_toggle_acceptance.c check_led_toggle_unit.c check_led_toggle.c ${TEST_LIBS} ${THE_LIBRARY}
 
-${THE_LIBRARY}: led.h led.c
-	${SILENT}${CC} ${CFLAGS} -c led.c
+${THE_LIBRARY}: ${LED_H} ${LED_C}
+	${SILENT}${CC} ${CFLAGS} -c ${LED_C} -o led.o
 	${SILENT}${AR} rc ${THE_LIBRARY} led.o
 	${SILENT}${RANLIB} ${THE_LIBRARY}
 
-${THE_PROGRAM}: ${THE_LIBRARY} led.h rpi_led_toggle.c
+${THE_PROGRAM}: ${THE_LIBRARY} ${LED_H} rpi_led_toggle.c
 	${SILENT}${CC} ${CFLAGS} -o ${THE_PROGRAM} rpi_led_toggle.c ${THE_LIBRARY}
