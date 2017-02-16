@@ -3,7 +3,7 @@ SILENT		?= @
 DEFAULT_SYSTEM	=  host
 THE_TESTS	=  check_led_toggle
 THE_LIBRARY	=  led.a
-THE_PROGRAM	=  rpi_led_toggle
+THE_PROGRAM	=  toggler
 
 TARGET_SYSTEM	?= ${DEFAULT_SYSTEM}
 ifeq (rpi, ${TARGET_SYSTEM})
@@ -62,5 +62,5 @@ ${THE_LIBRARY}: ${LED_H} ${LED_C}
 	${SILENT}${AR} rc ${THE_LIBRARY} led.o
 	${SILENT}${RANLIB} ${THE_LIBRARY}
 
-${THE_PROGRAM}: ${THE_LIBRARY} ${LED_H} rpi_led_toggle.c
-	${SILENT}${CC} ${CFLAGS} -o ${THE_PROGRAM} rpi_led_toggle.c ${THE_LIBRARY}
+${THE_PROGRAM}: ${THE_LIBRARY} ${LED_H} toggler.c
+	${SILENT}${CC} ${CFLAGS} -o ${THE_PROGRAM} toggler.c ${THE_LIBRARY}
