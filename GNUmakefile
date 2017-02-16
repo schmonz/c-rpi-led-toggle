@@ -2,7 +2,7 @@ SILENT		?= @
 
 DEFAULT_SYSTEM	=  host
 THE_TESTS	=  check_led_toggle
-THE_LIBRARY	=  ${LED_A}
+THE_LIBRARY	=  led.a
 THE_PROGRAM	=  toggler
 
 TARGET_SYSTEM	?= ${DEFAULT_SYSTEM}
@@ -31,11 +31,6 @@ TEST_CFLAGS	:= $(shell pkg-config --cflags check)
 TEST_LIBS	:= $(shell pkg-config --libs check)
 TEST_LIBS	+= -lm
 
-LED_H		= led.h
-LED_C		= led.c
-LED_O		= led.o
-LED_A		= led.a
-
 all: ${CC}
 	${SILENT}${MAKE} ${MAKE_TARGET}
 
@@ -57,14 +52,14 @@ clean:
 ${THE_TESTS}: ${THE_LIBRARY} check_led_toggle.c check_led_toggle_acceptance.c check_led_toggle_unit.c
 	${SILENT}${CC} ${CFLAGS} ${TEST_CFLAGS} -o ${THE_TESTS} check_led_toggle_acceptance.c check_led_toggle_unit.c check_led_toggle.c ${TEST_LIBS} ${THE_LIBRARY}
 
-${THE_LIBRARY}: ${LED_H} ${LED_C} syscalls.h ${TARGET_SYSTEM}_syscalls.h ${TARGET_SYSTEM}_syscalls.c
-	${SILENT}${CC} ${CFLAGS} -c ${LED_C}
+${THE_LIBRARY}: led.h led.c syscalls.h ${TARGET_SYSTEM}_syscalls.h ${TARGET_SYSTEM}_syscalls.c
+	${SILENT}${CC} ${CFLAGS} -c led.c
 	${SILENT}${CC} ${CFLAGS} -c ${TARGET_SYSTEM}_syscalls.c
-	${SILENT}${AR} rc ${THE_LIBRARY} ${LED_O} ${TARGET_SYSTEM}_syscalls.o
+	${SILENT}${AR} rc ${THE_LIBRARY} led.o ${TARGET_SYSTEM}_syscalls.o
 	${SILENT}${RANLIB} ${THE_LIBRARY}
 
 syscalls.h: ${TARGET_SYSTEM}_syscalls.h
 	${SILENT}echo '#include "${TARGET_SYSTEM}_syscalls.h"' > syscalls.h
 
-${THE_PROGRAM}: ${THE_LIBRARY} ${LED_H} toggler.c
+${THE_PROGRAM}: ${THE_LIBRARY} led.h toggler.c
 	${SILENT}${CC} ${CFLAGS} -o ${THE_PROGRAM} toggler.c ${THE_LIBRARY}
